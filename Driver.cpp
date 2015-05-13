@@ -123,10 +123,9 @@ void setupMap(Player &ship)
 	}
 	
 	move(22, 24);
-	//char temp[10];
-	//string score = getstr((char)ship.getScore());
-	
-	printw("Score: ");
+	//char score = ship.getScore();
+	int score = ship.getScore();
+	printw("Score: %i", score);
 	move(23, 24);
 	printw("Lives: ");
 	for(int i = 0; i < ship.getHealth(); i++)
