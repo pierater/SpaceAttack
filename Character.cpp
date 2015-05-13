@@ -66,6 +66,26 @@ void Character::reduceHealth()
 	else
 		isAlive = false;
 }
+//move will go here
+void Character::moveRight()
+{
+    if(x_coor >= 20)
+	return;
+    else
+        x_coor = x_coor + 1;
+}
+void Character::moveLeft()
+{
+    if(x_coor <= 1)
+        return;
+    else
+        x_coor = x_coor - 1;
+}
+void Character::moveDown()
+{
+    if(y_coor >= 22)
+        return;
+    else
+        y_coor = y_coor + 1;
+}
 
-
-// move() will go here
