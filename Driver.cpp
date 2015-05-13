@@ -38,7 +38,7 @@ int main()
     Player ship;
     ship.setShape('A');
     ship.setXcoor(10);
-    ship.setYcoor(10);
+    ship.setYcoor(22);
     
 
     initscr(); // changes screen to ncurses mode
@@ -49,7 +49,7 @@ int main()
     curs_set(0);
 
     // place the player in the screen
-    move(ship.getYcoor(), ship.getXcoor());
+    move(22, ship.getXcoor());
     printw("A");
     refresh();
 
@@ -76,7 +76,7 @@ int main()
         }                           
     clear();
 	setupMap();
-    move(ship.getYcoor(), ship.getXcoor());
+    move(22, ship.getXcoor());
     printw("A");
     refresh();
 
@@ -103,16 +103,22 @@ void setupMap()
 	for(int i = 1; i <= 22; i++)
 	{
 		move(i, 1);
-		printw("w");
+		printw("#");
 		move(i, 21);
-		printw("t");
+		printw("#");
 		
 	}
 		
-	for(int i = 0; i < 21; i++)
+	for(int i = 1; i < 22; i++)
 	{
 		move(23, i);
-		printw("g");
+		printw("#");
+	}
+	
+	for(int i = 1; i < 22; i++)
+	{
+		move(0, i);
+		printw("#");
 	}
 
 }
