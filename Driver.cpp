@@ -11,10 +11,11 @@
 #include "Player.h"
 #include "Laser_blast.h"
 #include <cstdlib>
+#include <string>
 
 using namespace std;
 void create_enemies(Enemy *enemies);
-void setupMap();
+void setupMap(Player &ship);
 
 int main()
 {
@@ -43,7 +44,7 @@ int main()
 
     initscr(); // changes screen to ncurses mode
     keypad(stdscr, TRUE); // allow the use of special keys (arrow keys)
-	setupMap();
+	setupMap(ship);
     refresh();
     // make the cursor invisible
     curs_set(0);
@@ -63,11 +64,11 @@ int main()
         switch(ch)                  
         {                           
             case KEY_RIGHT:         
-                ship.setXcoor(ship.getXcoor() + 1);
+                ship.moveRight();
                 break;              
                                     
             case KEY_LEFT:          
-                ship.setXcoor(ship.getXcoor() - 1);
+                ship.moveLeft();
                 break;              
                                     
             case 'q':               
@@ -75,7 +76,7 @@ int main()
                 break;              
         }                           
     clear();
-	setupMap();
+	setupMap(ship);
     move(22, ship.getXcoor());
     printw("A");
     refresh();
@@ -98,28 +99,39 @@ void create_enemies(Enemy *enemies)
 	
 }
 
-void setupMap()
+void setupMap(Player &ship)
 {
 	for(int i = 1; i <= 22; i++)
 	{
-		move(i, 1);
+		move(i, 0);
 		printw("#");
 		move(i, 21);
 		printw("#");
 		
 	}
 		
-	for(int i = 1; i < 22; i++)
+	for(int i = 0; i < 22; i++)
 	{
 		move(23, i);
 		printw("#");
 	}
 	
-	for(int i = 1; i < 22; i++)
+	for(int i = 0; i < 22; i++)
 	{
 		move(0, i);
 		printw("#");
 	}
+	
+	move(22, 24);
+	//char temp[10];
+	//string score = getstr((char)ship.getScore());
+	
+	printw("Score: ");
+	move(23, 24);
+	printw("Lives: ");
+	for(int i = 0; i < ship.getHealth(); i++)
+		mvprintw(23,i+31,"A");
+	
 
 }
 
