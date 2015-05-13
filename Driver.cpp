@@ -53,7 +53,7 @@ int main()
     refresh();
     // make the cursor invisible
     curs_set(0);
-
+	timeout(100);
     // place the player in the screen
     move(22, ship.getXcoor());
     printw("A");
@@ -105,6 +105,7 @@ int main()
     // after game events happen from this point forward.
     getch();  
     refresh(); // actually display stuff
+	timeout(-1);
     endwin();  // end curses mode
     return 0;
 }
@@ -120,6 +121,19 @@ void create_enemies(Enemy *enemies)
 
 void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 {
+	
+	move(22, 24);
+
+	int score = ship.getScore();
+	printw("Score: %i", score);
+	move(23, 24);
+	printw("Lives: ");
+	for(int i = 0; i < ship.getHealth(); i++)
+		mvprintw(23,i+31,"A");
+	//mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
+	for(int i = 0; i <= numLazers; i++)
+		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
+
 	for(int i = 1; i <= 22; i++)
 	{
 		move(i, 0);
@@ -140,18 +154,6 @@ void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 		move(0, i);
 		printw("#");
 	}
-	
-	move(22, 24);
-
-	int score = ship.getScore();
-	printw("Score: %i", score);
-	move(23, 24);
-	printw("Lives: ");
-	for(int i = 0; i < ship.getHealth(); i++)
-		mvprintw(23,i+31,"A");
-	//mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
-	for(int i = 0; i <= numLazers; i++)
-		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
 	
 
 }
@@ -177,7 +179,7 @@ int collision(Player &ship, int numLazers)
 {
 	for(int i = 0; i < numLazers; i++)
 	{
-		if(lazers[i].getY() == 1)
+		if(lazers[i].getY() == 0)
 		{
 			lazers[numLazers] = lazers[i];
 			for(int i = 0; i < numLazers-1; i++)

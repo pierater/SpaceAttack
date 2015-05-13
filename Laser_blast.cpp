@@ -44,7 +44,7 @@ void Laser_blast::move()
 
 void Laser_blast::shiftUp()
 {
-	if(y_position - 1 > 0)
+	if(y_position - 1 >= 0)
 		y_position--;
 	else
 		return;
