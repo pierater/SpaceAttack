@@ -17,6 +17,7 @@ using namespace std;
 void create_enemies(Enemy *enemies);
 void setupMap(Player &ship, Laser_blast lazers[100], int numLazers);
 int shoot(int numLazers, Player &ship);
+int collision(Player &ship, int numLazers);
 
 Laser_blast lazers[100];
 
@@ -64,7 +65,11 @@ int main()
     // start the game!!!
     while(!quit)
     {
-        ch = getch();               
+		//for(int i = 0; i < numLazers; i++)
+			//		lazers[i].shiftUp();
+		ch = 'L';
+        ch = getch();
+		mvprintw(0,30,"%i", ch);             
         switch(ch)                  
         {                           
             case KEY_RIGHT:         
@@ -74,14 +79,22 @@ int main()
             case KEY_LEFT:          
                 ship.moveLeft();
                 break;              
-            case 'm':
+            case ' ':
 				numLazers=  shoot(numLazers, ship);
 				break;       
             case 'q':               
                 quit = true;        
-                break;              
+                break;
+			case 'L':
+				for(int i = 0; i < numLazers; i++)
+					lazers[i].shiftUp();
+				          
         }                           
     clear();
+	numLazers = collision(ship, numLazers);
+	for(int i = 0; i < numLazers; i++)
+					lazers[i].shiftUp();
+	
 	setupMap(ship, lazers, numLazers);
     move(22, ship.getXcoor());
     printw("A");
@@ -136,7 +149,7 @@ void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 	printw("Lives: ");
 	for(int i = 0; i < ship.getHealth(); i++)
 		mvprintw(23,i+31,"A");
-	mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
+	//mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
 	
@@ -146,12 +159,13 @@ void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 
 int shoot(int numLazers, Player &ship)
 {
-	if(numLazers + 1 < 100)
+	if(numLazers + 1 < 99)
 	{
-		numLazers++;
+		
 		lazers[numLazers].setPositionY(21);
 		lazers[numLazers].setPositionX(ship.getXcoor());
-		mvprintw(1,30,"|%i", lazers[numLazers].getX());
+		numLazers++;
+		//mvprintw(1,30,"|%i", lazers[numLazers].getX());
 		return numLazers;
 	}
 	else
@@ -159,6 +173,22 @@ int shoot(int numLazers, Player &ship)
 
 }
 
+int collision(Player &ship, int numLazers)
+{
+	for(int i = 0; i < numLazers; i++)
+	{
+		if(lazers[i].getY() == 1)
+		{
+			lazers[numLazers] = lazers[i];
+			for(int i = 0; i < numLazers-1; i++)
+				lazers[i] = lazers[i+1];
+			return numLazers--;
+		}
+		
+				
+	}
+
+}
 
 
 

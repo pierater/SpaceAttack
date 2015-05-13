@@ -29,6 +29,7 @@ class Laser_blast
         void setDirection(string direction);
         void setPositionX(int position_x);
 		void setPositionY(int position_y);
+		void shiftUp();
 
         //methods
         void move();

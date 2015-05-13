@@ -41,3 +41,12 @@ void Laser_blast::move()
 {
     // move from ship to enemies or the other way around
 }
+
+void Laser_blast::shiftUp()
+{
+	if(y_position - 1 > 0)
+		y_position--;
+	else
+		return;
+
+}
