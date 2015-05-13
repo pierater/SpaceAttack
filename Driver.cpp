@@ -15,7 +15,10 @@
 
 using namespace std;
 void create_enemies(Enemy *enemies);
-void setupMap(Player &ship);
+void setupMap(Player &ship, Laser_blast lazers[100], int numLazers);
+int shoot(int numLazers, Player &ship);
+
+Laser_blast lazers[100];
 
 int main()
 {
@@ -32,7 +35,8 @@ int main()
     int ch; // variable for user input
     int dir; // used to select the direction of the ship.
 	int ENEMIES;
-	Enemy *enemies = new Enemy[5];
+	int numLazers = 0;
+	Enemy enemies[5];
     
 
     // objects
@@ -44,7 +48,7 @@ int main()
 
     initscr(); // changes screen to ncurses mode
     keypad(stdscr, TRUE); // allow the use of special keys (arrow keys)
-	setupMap(ship);
+	setupMap(ship, lazers, numLazers);
     refresh();
     // make the cursor invisible
     curs_set(0);
@@ -70,13 +74,15 @@ int main()
             case KEY_LEFT:          
                 ship.moveLeft();
                 break;              
-                                    
+            case 'm':
+				numLazers=  shoot(numLazers, ship);
+				break;       
             case 'q':               
                 quit = true;        
                 break;              
         }                           
     clear();
-	setupMap(ship);
+	setupMap(ship, lazers, numLazers);
     move(22, ship.getXcoor());
     printw("A");
     refresh();
@@ -99,7 +105,7 @@ void create_enemies(Enemy *enemies)
 	
 }
 
-void setupMap(Player &ship)
+void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 {
 	for(int i = 1; i <= 22; i++)
 	{
@@ -123,17 +129,35 @@ void setupMap(Player &ship)
 	}
 	
 	move(22, 24);
-	//char score = ship.getScore();
+
 	int score = ship.getScore();
 	printw("Score: %i", score);
 	move(23, 24);
 	printw("Lives: ");
 	for(int i = 0; i < ship.getHealth(); i++)
 		mvprintw(23,i+31,"A");
+	mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
+	for(int i = 0; i <= numLazers; i++)
+		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
 	
 
 }
 
+
+int shoot(int numLazers, Player &ship)
+{
+	if(numLazers + 1 < 100)
+	{
+		numLazers++;
+		lazers[numLazers].setPositionY(21);
+		lazers[numLazers].setPositionX(ship.getXcoor());
+		mvprintw(1,30,"|%i", lazers[numLazers].getX());
+		return numLazers;
+	}
+	else
+		return numLazers;
+
+}
 
 
 

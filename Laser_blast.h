@@ -14,6 +14,7 @@ class Laser_blast
     private:
         string direction;
         int x_position;
+		int y_position;
 
     public:
         Laser_blast();
@@ -21,10 +22,13 @@ class Laser_blast
 
         //accessors
         string getDirection()const{return direction;}
+		int getX()const {return x_position;}
+		int getY()const {return y_position;}
 
         //mutators
         void setDirection(string direction);
-        void setPositionX(int position_x, int max_x);
+        void setPositionX(int position_x);
+		void setPositionY(int position_y);
 
         //methods
         void move();

@@ -26,10 +26,15 @@ void Laser_blast::setDirection(string direction)
     this->direction = direction;
 }
 
-void Laser_blast::setPositionX(int position_x, int max_x)
+void Laser_blast::setPositionX(int position_x)
 {
-    assert(x_position >= 0 && x_position <= max_x);
-    this->x_position = x_position;
+    this->x_position = position_x;
+}
+
+void Laser_blast::setPositionY(int position_y)
+{
+	this->y_position= position_y;
+
 }
 
 void Laser_blast::move()
