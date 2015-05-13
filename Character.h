@@ -35,9 +35,12 @@ class Character
         void setXcoor(int x_coor /* int max_x*/);
         void setYcoor(int y_coor /* int max_y*/);
         void setShape(char shape);
-
-        //methods
+	
+	//methods
+    
         // move(); -> wasd, a for left, d for right or direction arrows
-        //
+        void moveRight();
+	void moveLeft();
+	void moveDown();
 };
 #endif // end class definition
