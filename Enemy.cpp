@@ -15,7 +15,7 @@ Enemy::Enemy() : Character()
     name = "bug";
 }
 
-Enemy::Enemy(string name) : Character(x_coor, y_coor, health, shape)
+Enemy::Enemy(string name, int x_coor, int y_coor, int health, char shape, bool isAlive) : Character(x_coor, y_coor, health, shape, isAlive)
 {
     assert(name != "");
     this->name = name;

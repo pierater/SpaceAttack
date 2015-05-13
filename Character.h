@@ -17,16 +17,18 @@ class Character
             x_coor,
             y_coor;
         char shape;
+		bool isAlive;
 
     public:
         Character();
-        Character(int x_coor, int y_coor, int health, char shape);
+        Character(int x_coor, int y_coor, int health, char shape, bool isAlive);
 
         //accessors
         int getHealth()const{return health;}
         int getXcoor()const{return x_coor;}
         int getYcoor()const{return y_coor;}
         char getShape()const{return shape;}
+		void reduceHealth();
 
         //mutators
         void setHealth(int health);
