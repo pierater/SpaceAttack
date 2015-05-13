@@ -13,9 +13,10 @@ Character::Character()
     x_coor = 0;
     y_coor = 10;
     shape = 'X';
+	isAlive = true;
 }
 
-Character::Character(int x_coor, int y_coor, int health, char shape)
+Character::Character(int x_coor, int y_coor, int health, char shape, bool isAlive)
 {
     assert(health >= 0);
     this->health = health;
@@ -28,6 +29,8 @@ Character::Character(int x_coor, int y_coor, int health, char shape)
 
     // check the shape input here...
     this->shape = shape;
+
+	this->isAlive = isAlive;
 }
 
 
@@ -54,6 +57,14 @@ void Character::setShape(char shape)
 {
     // check the shape input...
     this->shape = shape;
+}
+
+void Character::reduceHealth()
+{
+	if(health - 1 >= 0)
+		health--;
+	else
+		isAlive = false;
 }
 
 

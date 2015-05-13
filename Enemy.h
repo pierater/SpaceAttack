@@ -14,13 +14,15 @@ class Enemy : public Character
 {
     protected:
         string name;
+		int award;
 
     public:
         Enemy();
-        Enemy(string name);
+        Enemy(string name, int x_coor, int y_coor, int health, char shape, bool isAlive);
 
         //accessors
         string getName()const{return name;}
+		int getAward() const {return award;}
         
         //mutators
         void setName(string name);
