@@ -110,6 +110,7 @@ int main()
     } // this stuff happens in the game.
 
     // after game events happen from this point forward.
+	timeout(500);
 	endGame();
     getch();  
     refresh(); // actually display stuff
@@ -126,7 +127,7 @@ void create_enemies()
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
-		random = rand() % 19 + 1;
+		random = (rand() % 19) + 1;
 		enemies[i].setXcoor(random);
 		enemies[i].setYcoor(1);
 	}
@@ -145,7 +146,7 @@ void setupMap()
 	for(int i = 0; i < ship.getHealth(); i++)
 		mvprintw(23,i+31,"A");
 
-	mvprintw(0, 30, "score %i xcoor %i ENEMIES %i counter %i", ship.getScore(), enemies[ENEMIES].getXcoor(), ENEMIES, counter);
+	//mvprintw(0, 30, "score %i xcoor %i ENEMIES %i counter %i", ship.getScore(), enemies[ENEMIES].getXcoor(), ENEMIES, counter);
 
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
@@ -221,7 +222,7 @@ int collision()
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
-		mvprintw(5,i+30,"%i ", enemies[i].getYcoor());
+		//mvprintw(5,i+30,"%i ", enemies[i].getYcoor());
 		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == ship.getYcoor())
 		{
 			ship.reduceHealth();
@@ -241,7 +242,6 @@ int collision()
 			ENEMIES--;
 		}
 	}
-
 }
 
 void endGame()

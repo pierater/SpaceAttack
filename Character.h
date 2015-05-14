@@ -30,6 +30,7 @@ class Character
         int getYcoor()const{return y_coor;}
         char getShape()const{return shape;}
 		void reduceHealth();
+		void increaseHealth();
 
         //mutators
         void setHealth(int health);

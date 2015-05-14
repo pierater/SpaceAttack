@@ -102,3 +102,8 @@ void Character::increaseScore(int amount)
 	score += amount;
 }
 
+void Character::increaseHealth()
+{
+	health++;
+}
+
