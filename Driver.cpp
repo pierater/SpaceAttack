@@ -18,12 +18,14 @@ void create_enemies();
 void setupMap();
 void shoot();
 int collision();
+void endGame();
 
 Laser_blast lazers[100];
 Enemy enemies[100];
 int ENEMIES = 0;
 int numLazers = 0;
 Player ship;
+int counter = 0;
 
 
 int main()
@@ -67,7 +69,7 @@ int main()
 
 
     // start the game!!!
-    while(!quit)
+    while(!quit & ship.getHealth() != 0)
     {
 		//for(int i = 0; i < numLazers; i++)
 			//		lazers[i].shiftUp();
@@ -92,6 +94,7 @@ int main()
 				          
         }                           
     clear();
+	
 	create_enemies();
 	collision();
 	for(int i = 0; i < numLazers; i++)
@@ -107,6 +110,7 @@ int main()
     } // this stuff happens in the game.
 
     // after game events happen from this point forward.
+	endGame();
     getch();  
     refresh(); // actually display stuff
 	timeout(-1);
@@ -141,13 +145,12 @@ void setupMap()
 	for(int i = 0; i < ship.getHealth(); i++)
 		mvprintw(23,i+31,"A");
 
-	mvprintw(0, 30, "| %i %i %i %i", enemies[ENEMIES].getYcoor(), enemies[ENEMIES].getXcoor(), ENEMIES, lazers[numLazers].getX());
+	mvprintw(0, 30, "score %i xcoor %i ENEMIES %i counter %i", ship.getScore(), enemies[ENEMIES].getXcoor(), ENEMIES, counter);
 
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
 	
-	for(int i = 0; i < ENEMIES; i++)
-		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
+	
 
 	for(int i = 1; i <= 22; i++)
 	{
@@ -169,6 +172,9 @@ void setupMap()
 		move(0, i);
 		printw("#");
 	}
+
+	for(int i = 0; i < ENEMIES; i++)
+		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 	
 
 }
@@ -203,6 +209,7 @@ int collision()
 		}
 		else if(lazers[i].getY() == enemies[i].getYcoor() && lazers[i].getX() == enemies[i].getXcoor())
 		{
+			counter++;
 			ship.increaseScore(enemies[i].getAward());
 			enemies[ENEMIES] = enemies[i];
 			for(int j = 0; j < ENEMIES; j++)
@@ -214,6 +221,7 @@ int collision()
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
+		mvprintw(5,i+30,"%i ", enemies[i].getYcoor());
 		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == ship.getYcoor())
 		{
 			ship.reduceHealth();
@@ -222,16 +230,83 @@ int collision()
 				enemies[j] = enemies[j+1];
 			ENEMIES--;
 		}
-		else if(enemies[i].getYcoor() == 0)
+		else if(enemies[i].getYcoor() == 23)
 		{
+			
 			enemies[ENEMIES] = enemies[i];
 			for(int j = 0; j < ENEMIES-1; j++)
+			{
 				enemies[j] = enemies[j+1];
+			}
 			ENEMIES--;
 		}
 	}
 
 }
+
+void endGame()
+{
+	clear();
+	for(int i = 1; i <= 22; i++)
+	{
+		move(i, 0);
+		printw("#");
+		move(i, 21);
+		printw("#");
+		
+	}
+		
+	for(int i = 0; i < 22; i++)
+	{
+		move(23, i);
+		printw("#");
+	}
+	
+	for(int i = 0; i < 22; i++)
+	{
+		move(0, i);
+		printw("#");
+	}
+	mvprintw(10,6,"GAME OVER");
+	mvprintw(11,6,"Score: %i", ship.getScore());
+	timeout(5000);
+	
+	mvprintw(8,27,"  ________       .__  .__  .__              ");
+	mvprintw(9,27," /  _____/_____  |  | |  | |__| _________   ");
+	mvprintw(10,27,"/   \\  ___\\__  \\ |  | |  | |  |/ ___\\__  \\  ");
+	mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
+	mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
+	mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

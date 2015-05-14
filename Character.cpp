@@ -92,8 +92,13 @@ void Character::moveDown()
 void Character::shiftDown()
 {
 	if(y_coor + 1 >= 24)
-		return;
+		y_coor = 1;
 	else
 		y_coor++;
+}
+
+void Character::increaseScore(int amount)
+{
+	score += amount;
 }
 

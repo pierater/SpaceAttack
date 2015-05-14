@@ -18,6 +18,7 @@ class Character
             y_coor;
         char shape;
 		bool isAlive;
+		int score;
 
     public:
         Character();
@@ -43,5 +44,6 @@ class Character
 		void moveLeft();
 		void moveDown();
 		void shiftDown();
+		void increaseScore(int amount);
 };
 #endif // end class definition

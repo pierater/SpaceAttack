@@ -26,6 +26,7 @@ class Enemy : public Character
         
         //mutators
         void setName(string name);
+		void setScore(int score);
 
         //methods
         // ???
