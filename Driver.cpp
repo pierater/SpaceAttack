@@ -12,6 +12,8 @@
 #include "Laser_blast.h"
 #include <cstdlib>
 #include <string>
+#include <fstream>
+
 
 using namespace std;
 void create_enemies();
@@ -19,6 +21,7 @@ void setupMap();
 void shoot();
 int collision();
 void endGame();
+void highScores();
 
 Laser_blast lazers[100];
 Enemy enemies[100];
@@ -26,6 +29,7 @@ int ENEMIES = 0;
 int numLazers = 0;
 Player ship;
 int counter = 0;
+int HIGHSCORE = 0;
 
 
 int main()
@@ -150,7 +154,8 @@ void setupMap()
 
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
-	
+	for(int i = 0; i < ENEMIES; i++)
+		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 	
 
 	for(int i = 1; i <= 22; i++)
@@ -174,8 +179,7 @@ void setupMap()
 		printw("#");
 	}
 
-	for(int i = 0; i < ENEMIES; i++)
-		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
+	
 	
 
 }
@@ -246,42 +250,90 @@ int collision()
 
 void endGame()
 {
+	
+	
+	int ch = getch();
 	clear();
-	for(int i = 1; i <= 22; i++)
-	{
-		move(i, 0);
-		printw("#");
-		move(i, 21);
-		printw("#");
-		
-	}
-		
-	for(int i = 0; i < 22; i++)
-	{
-		move(23, i);
-		printw("#");
-	}
 	
-	for(int i = 0; i < 22; i++)
+	while(ch != 't')
 	{
-		move(0, i);
-		printw("#");
-	}
-	mvprintw(10,6,"GAME OVER");
-	mvprintw(11,6,"Score: %i", ship.getScore());
-	timeout(5000);
+		highScores();
+		ch = getch();
+		
+		for(int i = 1; i <= 22; i++)
+		{
+			move(i, 0);
+			printw("#");
+			move(i, 21);
+			printw("#");
+		
+		}
+		
+		for(int i = 0; i < 22; i++)
+		{
+			move(23, i);
+			printw("#");
+		}
 	
-	mvprintw(8,27,"  ________       .__  .__  .__              ");
-	mvprintw(9,27," /  _____/_____  |  | |  | |__| _________   ");
-	mvprintw(10,27,"/   \\  ___\\__  \\ |  | |  | |  |/ ___\\__  \\  ");
-	mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
-	mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
-	mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+		for(int i = 0; i < 22; i++)
+		{
+			move(0, i);
+			printw("#");
+		}
+		mvprintw(10,6,"GAME OVER");
+		mvprintw(11,6,"Score: %i", ship.getScore());
+	
+		mvprintw(8,27,"  ________       .__  .__  .__              ");
+		mvprintw(9,27," /  _____/_____  |  | |  | |__| _________   ");
+		mvprintw(10,27,"/   \\  ___\\__  \\ |  | |  | |  |/ ___\\__  \\  ");
+		mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
+		mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
+		mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+
+	}
 	
 	
 }
 
+void highScores()
+{
+	ifstream in;
+	in.open("Scores.txt");
+	int scores[5];
+	
+	for(int i = 0; i < 5; i++)
+		in >> scores[i];
+	
+	in.close();
+	
+	for(int i = 0; i < 5; i++)
+	{
+		if(ship.getScore() > scores[i])
+		{
+			scores[i] = ship.getScore();
+			i = 5;
+		}
+	}
+	
+	ofstream out;
+	out.open("Scores.txt");
+	for(int i = 0; i < 5; i++)
+	{
+		out << scores[i] << endl;
+	}
+	
+	out.close();
+	
+	in.open("Scores.txt");
+	mvprintw(14,5,"HIGH SCORES:");
+	for(int i = 0; i < 5; i++)
+	{
+		mvprintw(16+i, 5, "%i) %i", i+1, scores[i]);
+	}
+	move(40,40);
+	in.close();
 
+}
 
 
 
