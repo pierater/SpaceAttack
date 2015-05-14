@@ -89,3 +89,11 @@ void Character::moveDown()
         y_coor = y_coor + 1;
 }
 
+void Character::shiftDown()
+{
+	if(y_coor + 1 >= 24)
+		return;
+	else
+		y_coor++;
+}
+

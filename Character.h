@@ -40,7 +40,8 @@ class Character
     
         // move(); -> wasd, a for left, d for right or direction arrows
         void moveRight();
-	void moveLeft();
-	void moveDown();
+		void moveLeft();
+		void moveDown();
+		void shiftDown();
 };
 #endif // end class definition

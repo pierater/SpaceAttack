@@ -14,12 +14,17 @@
 #include <string>
 
 using namespace std;
-void create_enemies(Enemy *enemies);
-void setupMap(Player &ship, Laser_blast lazers[100], int numLazers);
-int shoot(int numLazers, Player &ship);
-int collision(Player &ship, int numLazers);
+void create_enemies();
+void setupMap();
+void shoot();
+int collision();
 
 Laser_blast lazers[100];
+Enemy enemies[100];
+int ENEMIES = 0;
+int numLazers = 0;
+Player ship;
+
 
 int main()
 {
@@ -35,13 +40,12 @@ int main()
     bool quit = false; // continue while false.
     int ch; // variable for user input
     int dir; // used to select the direction of the ship.
-	int ENEMIES;
-	int numLazers = 0;
-	Enemy enemies[5];
+	
+	
     
 
     // objects
-    Player ship;
+    
     ship.setShape('A');
     ship.setXcoor(10);
     ship.setYcoor(22);
@@ -49,7 +53,7 @@ int main()
 
     initscr(); // changes screen to ncurses mode
     keypad(stdscr, TRUE); // allow the use of special keys (arrow keys)
-	setupMap(ship, lazers, numLazers);
+	setupMap();
     refresh();
     // make the cursor invisible
     curs_set(0);
@@ -80,22 +84,22 @@ int main()
                 ship.moveLeft();
                 break;              
             case ' ':
-				numLazers=  shoot(numLazers, ship);
+				shoot();
 				break;       
             case 'q':               
                 quit = true;        
                 break;
-			case 'L':
-				for(int i = 0; i < numLazers; i++)
-					lazers[i].shiftUp();
 				          
         }                           
     clear();
-	numLazers = collision(ship, numLazers);
+	create_enemies();
+	collision();
 	for(int i = 0; i < numLazers; i++)
-					lazers[i].shiftUp();
+		lazers[i].shiftUp();
+	for(int i = 0; i < ENEMIES; i++)
+		enemies[i].shiftDown();
 	
-	setupMap(ship, lazers, numLazers);
+	setupMap();
     move(22, ship.getXcoor());
     printw("A");
     refresh();
@@ -110,16 +114,22 @@ int main()
     return 0;
 }
 
-void create_enemies(Enemy *enemies)
+void create_enemies()
 {
-    srand(time(NULL));
-	int random = rand() % 5;
+	srand(time(NULL));
+	int random = rand() % 20;
+	ENEMIES = rand() % 10;
 	
-	//for()
+	for(int i = 0; i < ENEMIES; i++)
+	{
+		random = rand() % 19 + 1;
+		enemies[i].setXcoor(random);
+		enemies[i].setYcoor(1);
+	}
 	
 }
 
-void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
+void setupMap()
 {
 	
 	move(22, 24);
@@ -130,9 +140,14 @@ void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 	printw("Lives: ");
 	for(int i = 0; i < ship.getHealth(); i++)
 		mvprintw(23,i+31,"A");
-	//mvprintw(0, 30, "|%i %i %i %i", lazers[numLazers].getY(), ship.getXcoor(), numLazers, lazers[numLazers].getX());
+
+	mvprintw(0, 30, "| %i %i %i %i", enemies[ENEMIES].getYcoor(), enemies[ENEMIES].getXcoor(), ENEMIES, lazers[numLazers].getX());
+
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
+	
+	for(int i = 0; i < ENEMIES; i++)
+		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 
 	for(int i = 1; i <= 22; i++)
 	{
@@ -159,7 +174,7 @@ void setupMap(Player &ship, Laser_blast lazers[100], int numLazers)
 }
 
 
-int shoot(int numLazers, Player &ship)
+void shoot()
 {
 	if(numLazers + 1 < 99)
 	{
@@ -168,14 +183,14 @@ int shoot(int numLazers, Player &ship)
 		lazers[numLazers].setPositionX(ship.getXcoor());
 		numLazers++;
 		//mvprintw(1,30,"|%i", lazers[numLazers].getX());
-		return numLazers;
+		return;
 	}
 	else
-		return numLazers;
+		return;
 
 }
 
-int collision(Player &ship, int numLazers)
+int collision()
 {
 	for(int i = 0; i < numLazers; i++)
 	{
@@ -184,10 +199,36 @@ int collision(Player &ship, int numLazers)
 			lazers[numLazers] = lazers[i];
 			for(int i = 0; i < numLazers-1; i++)
 				lazers[i] = lazers[i+1];
-			return numLazers--;
+			numLazers--;
 		}
-		
+		else if(lazers[i].getY() == enemies[i].getYcoor() && lazers[i].getX() == enemies[i].getXcoor())
+		{
+			ship.increaseScore(enemies[i].getAward());
+			enemies[ENEMIES] = enemies[i];
+			for(int j = 0; j < ENEMIES; j++)
+				enemies[j] = enemies[j+1];
+			ENEMIES--;
+		}
 				
+	}
+	
+	for(int i = 0; i < ENEMIES; i++)
+	{
+		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == ship.getYcoor())
+		{
+			ship.reduceHealth();
+			enemies[ENEMIES] = enemies[i];
+			for(int j = 0; j < ENEMIES-1; j++)
+				enemies[j] = enemies[j+1];
+			ENEMIES--;
+		}
+		else if(enemies[i].getYcoor() == 0)
+		{
+			enemies[ENEMIES] = enemies[i];
+			for(int j = 0; j < ENEMIES-1; j++)
+				enemies[j] = enemies[j+1];
+			ENEMIES--;
+		}
 	}
 
 }

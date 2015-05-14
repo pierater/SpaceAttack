@@ -26,3 +26,4 @@ void Enemy::setName(string name)
     assert(name != "");
     this->name = name;
 }
+
