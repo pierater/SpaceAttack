@@ -2,10 +2,8 @@
 // Driver.cpp
 // ***********************************************************************
 
-#include <iostream>
-#include <string>
+
 #include <ncurses.h>
-#include "Board.h"
 #include "Character.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -24,6 +22,7 @@ void endGame();
 void highScores();
 void resetGame();
 void resetScores();
+void checkBonus();
 
 Laser_blast lazers[100];
 Enemy enemies[100];
@@ -32,6 +31,7 @@ int numLazers = 0;
 Player ship;
 int counter = 0;
 int HIGHSCORE = 0;
+int DIFFICULTY = 1;
 
 
 int main()
@@ -100,9 +100,10 @@ int main()
 				          
         }                           
     clear();
-	if(ENEMIES <= 2)
+	if(ENEMIES <= DIFFICULTY)
 		create_enemies();
 	collision();
+	checkBonus();
 	for(int i = 0; i < numLazers; i++)
 		lazers[i].shiftUp();
 	for(int i = 0; i < ENEMIES; i++)
@@ -385,6 +386,7 @@ void resetGame()
 {
 	ship.setHealth(3);
 	ship.increaseScore(-1 * ship.getScore());
+	DIFFICULTY = 1;
 	main();
 	
 
@@ -398,7 +400,15 @@ void resetScores()
 	out.close();
 }
 
-
+void checkBonus()
+{
+	if(ship.getScore() % 1000 == 0 && ship.getScore() != 0)
+	{
+		ship.increaseScore(50);
+		DIFFICULTY++;
+		ship.increaseHealth();
+	}
+}
 
 
 
