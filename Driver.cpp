@@ -26,6 +26,7 @@ void highScores();
 void resetGame();
 void resetScores();
 void checkBonus();
+void pause();
 
 // Global variables
 Laser_blast lazers[100];
@@ -100,6 +101,9 @@ int main()
             case 'q':               
                 quit = true;        
                 break;
+			case KEY_BACKSPACE:
+				pause();
+				break;
 				          
         }                           
     clear();
@@ -433,7 +437,60 @@ void checkBonus()
 	}
 }
 
+void pause()
+{
+	int ch = getch();
+	clear();
 
+	while(ch != KEY_BACKSPACE)
+	{
+		ch = getch();
+		
+		for(int i = 1; i <= 22; i++)
+		{
+			move(i, 0);
+			printw("#");
+			move(i, 21);
+			printw("#");
+		
+		}
+		
+		for(int i = 0; i < 22; i++)
+		{
+			move(23, i);
+			printw("#");
+		}
+	
+		for(int i = 0; i < 22; i++)
+		{
+			move(0, i);
+			printw("#");
+		}
+		mvprintw(10,6,"PAUSED");
+		mvprintw(11,6,"Score: %i", ship.getScore());
+	
+		mvprintw(8,27,"  ________       .__  .__  .__              ");
+		mvprintw(9,27," /  _____/_____  |  | |  | |__| _________   ");
+		mvprintw(10,27,"/   \\  ___\\__  \\ |  | |  | |  |/ ___\\__  \\  ");
+		mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
+		mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
+		mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+		
+		mvprintw(14,27,"  _____________________________________________");
+		mvprintw(15,27," /                   Creators:                 \\");
+		mvprintw(16,27,"|         Martin Almaraz	Juan E. Garcia     |");
+		mvprintw(17,27," \\__________________Jose Cortez________________/");
+		if(ch == 'r')
+			resetGame();
+		// Our secret menu options...shhh
+		else if(ch == '`')
+			resetScores();
+		else if(ch == '1')
+			ship.setHealth(100);
+
+	}
+
+}
 
 
 
