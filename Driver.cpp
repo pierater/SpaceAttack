@@ -328,6 +328,13 @@ void endGame()
 			resetGame();
 		else if(ch == '`')
 			resetScores();
+		else if(ch == '1')
+		{
+			ship.setHealth(100);
+			ship.increaseScore(-1 * ship.getScore());
+			DIFFICULTY = 1;
+			main();
+		}
 
 	}
 	

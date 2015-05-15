@@ -37,7 +37,7 @@ Character::Character(int x_coor, int y_coor, int health, char shape, bool isAliv
 // mutators
 void Character::setHealth(int health)
 {
-    assert(health >= 0 && health <= 6);
+    assert(health >= 0);
     this->health = health;
 }
 
