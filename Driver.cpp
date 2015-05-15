@@ -310,7 +310,14 @@ void highScores()
 	{
 		if(ship.getScore() > scores[i])
 		{
+			int temp = scores[i];
 			scores[i] = ship.getScore();
+			int temps[5];
+			for(int j = 0; j < 5; j++)
+			{
+				if()
+				temps[j] = scores[j];
+			}
 			i = 5;
 		}
 	}
