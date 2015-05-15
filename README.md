@@ -1,4 +1,8 @@
-SPACEATTACK:
+
+REQUIREMENTS:
+	c++ Library ncurses
+
+PACEATTACK:
 	A Galaga clone written in C++ and using the ncurses library.
 
 
