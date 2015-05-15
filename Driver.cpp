@@ -22,6 +22,7 @@ void shoot();
 int collision();
 void endGame();
 void highScores();
+void resetGame();
 
 Laser_blast lazers[100];
 Enemy enemies[100];
@@ -98,8 +99,8 @@ int main()
 				          
         }                           
     clear();
-	
-	create_enemies();
+	if(ENEMIES == 0)
+		create_enemies();
 	collision();
 	for(int i = 0; i < numLazers; i++)
 		lazers[i].shiftUp();
@@ -126,12 +127,22 @@ int main()
 void create_enemies()
 {
 	srand(time(NULL));
-	int random = rand() % 20;
-	ENEMIES = rand() % 10;
+	int random;
+	ENEMIES = rand() % 20;
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
 		random = (rand() % 19) + 1;
+		for(int j = 0; j < ENEMIES; j++)
+		{
+			if(enemies[j].getXcoor() == random)
+			{
+				//j = 0;
+				random = (rand() % 19) + 1;
+			}
+
+		}
+		
 		enemies[i].setXcoor(random);
 		enemies[i].setYcoor(1);
 	}
@@ -154,8 +165,7 @@ void setupMap()
 
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
-	for(int i = 0; i < ENEMIES; i++)
-		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
+	
 	
 
 	for(int i = 1; i <= 22; i++)
@@ -179,7 +189,8 @@ void setupMap()
 		printw("#");
 	}
 
-	
+	for(int i = 0; i < ENEMIES; i++)
+		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 	
 
 }
@@ -208,43 +219,59 @@ int collision()
 		if(lazers[i].getY() == 0)
 		{
 			lazers[numLazers] = lazers[i];
-			for(int i = 0; i < numLazers-1; i++)
-				lazers[i] = lazers[i+1];
+			for(int j = numLazers; j > i; j--)
+				lazers[j] = lazers[j-1];
 			numLazers--;
-		}
-		else if(lazers[i].getY() == enemies[i].getYcoor() && lazers[i].getX() == enemies[i].getXcoor())
-		{
-			counter++;
-			ship.increaseScore(enemies[i].getAward());
-			enemies[ENEMIES] = enemies[i];
-			for(int j = 0; j < ENEMIES; j++)
-				enemies[j] = enemies[j+1];
-			ENEMIES--;
-		}
-				
+		}	
 	}
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
 		//mvprintw(5,i+30,"%i ", enemies[i].getYcoor());
-		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == ship.getYcoor())
+		
+		for(int k = 0; k < numLazers; k++)
+		{
+			if(lazers[k].getY() == enemies[i].getYcoor() && lazers[k].getX() == enemies[i].getXcoor())
+			{
+				ship.increaseScore(enemies[i].getAward());
+				enemies[ENEMIES] = enemies[i];
+				for(int j = ENEMIES; j > i; j--)
+					enemies[j] = enemies[j-1];
+				ENEMIES--;
+			}
+		
+		}
+	}
+		/*
+		if(lazers[i].getY() == enemies[i].getYcoor() && lazers[i].getX() == enemies[i].getXcoor())
+		{
+			//counter++;
+			ship.increaseScore(enemies[i].getAward());
+			enemies[ENEMIES] = enemies[i];
+			for(int j = ENEMIES; j > i; j--)
+				enemies[j] = enemies[j-1];
+			ENEMIES--;
+		}
+		*/
+	for(int i = 0; i < ENEMIES; i++)
+	{
+		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == 22)
 		{
 			ship.reduceHealth();
 			enemies[ENEMIES] = enemies[i];
-			for(int j = 0; j < ENEMIES-1; j++)
-				enemies[j] = enemies[j+1];
+			for(int j = ENEMIES; j > i; j--)
+				enemies[j] = enemies[j-1];
 			ENEMIES--;
 		}
 		else if(enemies[i].getYcoor() == 23)
 		{
 			
 			enemies[ENEMIES] = enemies[i];
-			for(int j = 0; j < ENEMIES-1; j++)
-			{
-				enemies[j] = enemies[j+1];
-			}
+			for(int j = ENEMIES; j > i; j--)
+				enemies[j] = enemies[j-1];
 			ENEMIES--;
 		}
+		
 	}
 }
 
@@ -256,7 +283,7 @@ void endGame()
 	clear();
 	highScores();
 	
-	while(ch != 't')
+	while(ch != 'q')
 	{
 		ch = getch();
 		
@@ -289,8 +316,13 @@ void endGame()
 		mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
 		mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
 		mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+		mvprintw(23,58,"q) Quit  r) Restart :");
+		if(ch == 'r')
+		resetGame();
 
 	}
+	
+
 	
 	
 }
@@ -341,7 +373,15 @@ void highScores()
 
 }
 
+void resetGame()
+{
+	ship.setHealth(3);
+	ship.increaseScore(-1 * ship.getScore());
+	main();
+	
 
+
+}
 
 
 
