@@ -23,6 +23,7 @@ int collision();
 void endGame();
 void highScores();
 void resetGame();
+void resetScores();
 
 Laser_blast lazers[100];
 Enemy enemies[100];
@@ -99,7 +100,7 @@ int main()
 				          
         }                           
     clear();
-	if(ENEMIES == 0)
+	if(ENEMIES <= 2)
 		create_enemies();
 	collision();
 	for(int i = 0; i < numLazers; i++)
@@ -165,7 +166,8 @@ void setupMap()
 
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
-	
+	for(int i = 0; i < ENEMIES; i++)
+		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 	
 
 	for(int i = 1; i <= 22; i++)
@@ -189,8 +191,7 @@ void setupMap()
 		printw("#");
 	}
 
-	for(int i = 0; i < ENEMIES; i++)
-		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
+	
 	
 
 }
@@ -316,9 +317,16 @@ void endGame()
 		mvprintw(11,27,"\\    \\_\\  \\/ __ \\|  |_|  |_|  / /_/  > __ \\_");
 		mvprintw(12,27," \\______  (____  /____/____/__\\___  (____  /");
 		mvprintw(13,27,"        \\/     \\/            /_____/     \\/ ");
+		
+		mvprintw(14,27,"  _____________________________________________");
+		mvprintw(15,27," /                   Creators:                 \\");
+		mvprintw(16,27,"|         Martin Almaraz	Juan E. Garcia     |");
+		mvprintw(17,27," \\__________________Jose Cortez________________/");
 		mvprintw(23,58,"q) Quit  r) Restart :");
 		if(ch == 'r')
-		resetGame();
+			resetGame();
+		else if(ch == '`')
+			resetScores();
 
 	}
 	
@@ -383,7 +391,12 @@ void resetGame()
 
 }
 
-
+void resetScores()
+{
+	ofstream out;
+	out.open("Scores.txt");
+	out.close();
+}
 
 
 
