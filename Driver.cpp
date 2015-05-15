@@ -14,6 +14,9 @@
 
 
 using namespace std;
+
+// Main functions to manipulate the game
+
 void create_enemies();
 void setupMap();
 void shoot();
@@ -24,6 +27,7 @@ void resetGame();
 void resetScores();
 void checkBonus();
 
+// Global variables
 Laser_blast lazers[100];
 Enemy enemies[100];
 int ENEMIES = 0;
@@ -52,8 +56,7 @@ int main()
 	
     
 
-    // objects
-    
+    // initialize player object so that it starts the game
     ship.setShape('A');
     ship.setXcoor(10);
     ship.setYcoor(22);
@@ -100,16 +103,20 @@ int main()
 				          
         }                           
     clear();
+	// Here is where the difficulty of the game is implemented
+	// As DIFFICULTY goes up, more enemies spawn
 	if(ENEMIES <= DIFFICULTY)
 		create_enemies();
-	collision();
-	checkBonus();
+	collision(); // Collision tracking of all objects
+	checkBonus(); // This gives the player bonuses and changes difficulty based on the score
+
+	// All object movement that isnt the main player
 	for(int i = 0; i < numLazers; i++)
 		lazers[i].shiftUp();
 	for(int i = 0; i < ENEMIES; i++)
 		enemies[i].shiftDown();
 	
-	setupMap();
+	setupMap(); // Sets up the map for each frame, prints all objects
     move(22, ship.getXcoor());
     printw("A");
     refresh();
@@ -128,10 +135,13 @@ int main()
 
 void create_enemies()
 {
+	
+	// A random number of enemies is created
 	srand(time(NULL));
 	int random;
 	ENEMIES = rand() % 20;
 	
+	// For each enemy created, they are assigned a random x value, and set to the top of the screen
 	for(int i = 0; i < ENEMIES; i++)
 	{
 		random = (rand() % 19) + 1;
@@ -157,20 +167,20 @@ void setupMap()
 	move(22, 24);
 
 	int score = ship.getScore();
-	printw("Score: %i", score);
+	printw("Score: %i", score); // Prints score
 	move(23, 24);
 	printw("Lives: ");
-	for(int i = 0; i < ship.getHealth(); i++)
+	for(int i = 0; i < ship.getHealth(); i++) // A loop that displays an actual number of lives as "A"
 		mvprintw(23,i+31,"A");
 
-	//mvprintw(0, 30, "score %i xcoor %i ENEMIES %i counter %i", ship.getScore(), enemies[ENEMIES].getXcoor(), ENEMIES, counter);
 
+	// Actually prints all the objects
 	for(int i = 0; i <= numLazers; i++)
 		mvprintw(lazers[i].getY(), lazers[i].getX(), "|");
 	for(int i = 0; i < ENEMIES; i++)
 		mvprintw(enemies[i].getYcoor(), enemies[i].getXcoor(), "v");
 	
-
+	// Prints the border for the game
 	for(int i = 1; i <= 22; i++)
 	{
 		move(i, 0);
@@ -200,6 +210,7 @@ void setupMap()
 
 void shoot()
 {
+	// Sets the lazers to shoot starting from the current players x pos
 	if(numLazers + 1 < 99)
 	{
 		
@@ -216,6 +227,13 @@ void shoot()
 
 int collision()
 {
+	
+	// These three loops check for collisions in a certain order
+	// First, lazers are checked if they have reached the edge of the screen\
+	// Then, Enemies are tracked and checked with lazers, because they should be shot down first
+	// Finally the enemy on the ship is tracked only if the enemy isnt shot down from the lazer
+	// Each loop takes the object out of the array and puts it at the end of the array, then decreases 	
+	// 		the total amount of objects by one and shifts all other objects down
 	for(int i = 0; i < numLazers; i++)
 	{
 		if(lazers[i].getY() == 0)
@@ -229,7 +247,6 @@ int collision()
 	
 	for(int i = 0; i < ENEMIES; i++)
 	{
-		//mvprintw(5,i+30,"%i ", enemies[i].getYcoor());
 		
 		for(int k = 0; k < numLazers; k++)
 		{
@@ -244,17 +261,7 @@ int collision()
 		
 		}
 	}
-		/*
-		if(lazers[i].getY() == enemies[i].getYcoor() && lazers[i].getX() == enemies[i].getXcoor())
-		{
-			//counter++;
-			ship.increaseScore(enemies[i].getAward());
-			enemies[ENEMIES] = enemies[i];
-			for(int j = ENEMIES; j > i; j--)
-				enemies[j] = enemies[j-1];
-			ENEMIES--;
-		}
-		*/
+
 	for(int i = 0; i < ENEMIES; i++)
 	{
 		if(enemies[i].getXcoor() == ship.getXcoor() && enemies[i].getYcoor() == 22)
@@ -280,7 +287,8 @@ int collision()
 void endGame()
 {
 	
-	
+	// This is endgame screen
+	// Displays score that is taken from a txt file and our creators and galliga logo
 	int ch = getch();
 	clear();
 	highScores();
@@ -326,6 +334,7 @@ void endGame()
 		mvprintw(23,58,"q) Quit  r) Restart :");
 		if(ch == 'r')
 			resetGame();
+		// Our secret menu options...shhh
 		else if(ch == '`')
 			resetScores();
 		else if(ch == '1')
@@ -345,6 +354,8 @@ void endGame()
 
 void highScores()
 {
+	// Opens the high score txt file and checks to see if your score is greater than any of them
+	// If so, then the score is inputed and old scores are moved down
 	ifstream in;
 	in.open("Scores.txt");
 	int scores[5];
@@ -391,6 +402,8 @@ void highScores()
 
 void resetGame()
 {
+
+	// Resets the game and its variables
 	ship.setHealth(3);
 	ship.increaseScore(-1 * ship.getScore());
 	DIFFICULTY = 1;
@@ -402,6 +415,7 @@ void resetGame()
 
 void resetScores()
 {
+	// SHHH...secret menu option that resets all scores to 0
 	ofstream out;
 	out.open("Scores.txt");
 	out.close();
@@ -409,6 +423,8 @@ void resetScores()
 
 void checkBonus()
 {
+	// Checks to see if the player has scored enough points to increase the difficulty and give bonus 
+	// lives
 	if(ship.getScore() % 1000 == 0 && ship.getScore() != 0)
 	{
 		ship.increaseScore(50);
