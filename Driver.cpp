@@ -254,10 +254,10 @@ void endGame()
 	
 	int ch = getch();
 	clear();
+	highScores();
 	
 	while(ch != 't')
 	{
-		highScores();
 		ch = getch();
 		
 		for(int i = 1; i <= 22; i++)
@@ -306,18 +306,17 @@ void highScores()
 	
 	in.close();
 	
+	
+	
+	
+	
 	for(int i = 0; i < 5; i++)
 	{
 		if(ship.getScore() > scores[i])
 		{
-			int temp = scores[i];
+			for(int j = 5; j > i; j--)
+				scores[j] = scores[j - 1];
 			scores[i] = ship.getScore();
-			int temps[5];
-			for(int j = 0; j < 5; j++)
-			{
-				if()
-				temps[j] = scores[j];
-			}
 			i = 5;
 		}
 	}
